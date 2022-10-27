@@ -3,10 +3,7 @@ package org.example.three;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Predicate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,11 +22,14 @@ public class Service {
         }
     }
 
-    public void addUsers(int... IDs) { //Возможно это имелось ввиду
-        for (int id : IDs) {
-            array.add(new UserFriend(id));
-        }
+    public Observable<UserFriend> addAndGetUsers(int uID, int... IDs) { //Возможно это имелось ввиду
+        return getFriends(uID).concatWith(Observable.fromIterable(Arrays.stream(IDs).boxed().collect(Collectors.toList())).map(e -> {
+            UserFriend uf = new UserFriend(e);
+            array.add(uf);
+            return uf;
+        }));
     }
+
 
     public Observable<UserFriend> getFriends(int userId) {
         return Observable.fromIterable(array).filter(u -> u.getUserId() == userId);

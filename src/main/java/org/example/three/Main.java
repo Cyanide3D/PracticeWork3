@@ -17,6 +17,9 @@ public class Main {
 
         Observable<UserFriend> friends = service.getFriends(1);
         friends.forEach(System.out::println);
+
+        Observable<UserFriend> friends1 = addUsers(1, 2, 4, 5);
+        friends1.forEach(System.out::println);
     }
 
     private static Observable<UserFriend> addUsers(int uID, int... IDs) {

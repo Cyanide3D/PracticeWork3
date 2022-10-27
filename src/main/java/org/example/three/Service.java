@@ -12,14 +12,27 @@ import java.util.stream.Collectors;
 
 public class Service {
 
-    private final Observable<UserFriend> array;
+//    private Observable<UserFriend> array;
+    private final List<UserFriend> array;
 
-    public Service(int... IDs) {
-        array = Observable.fromIterable(Arrays.stream(IDs).boxed().collect(Collectors.toList())).map(UserFriend::new); //Получаем в конструкторе ID'шники, формируем из них List, а из него уже Observable.
+    public Service() {
+        array = new ArrayList<>();
+    }
+
+    public void addFriends(int userId, int... friendIDs) {
+        for (int friendID : friendIDs) {
+            array.add(new UserFriend(userId, friendID));
+        }
+    }
+
+    public void addUsers(int... IDs) { //Возможно это имелось ввиду
+        for (int id : IDs) {
+            array.add(new UserFriend(id));
+        }
     }
 
     public Observable<UserFriend> getFriends(int userId) {
-        return array.filter(u -> u.getUserId() == userId); //Фильтруем Observable по userId и отдаём результат пользователю
+        return Observable.fromIterable(array).filter(u -> u.getUserId() == userId);
     }
 
 }

@@ -2,11 +2,25 @@ package org.example.three;
 
 import io.reactivex.rxjava3.core.Observable;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Main {
 
+    private static final Service service = new Service();
+
     public static void main(String[] args) {
-        Service service = new Service(1,14,16,76,45); //Не очень понял что в этом задании делать надо, но вроде ТЗ соответствует
-        Observable<UserFriend> friends = service.getFriends(14);
+        service.addFriends(14, 15, 13);
+        service.addFriends(15, 13);
+        service.addFriends(13, 15);
+        service.addFriends(1, 14, 15, 13);
+
+        Observable<UserFriend> friends = service.getFriends(1);
+        friends.forEach(System.out::println);
+    }
+
+    private static Observable<UserFriend> addUsers(int uID, int... IDs) {
+        return service.getFriends(uID).concatWith(Observable.fromIterable(Arrays.stream(IDs).boxed().collect(Collectors.toList())).map(UserFriend::new));
     }
 
 }
